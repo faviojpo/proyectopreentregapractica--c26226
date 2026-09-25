@@ -49,7 +49,7 @@ async function ejecutar() {
       if (!title || !price || !category) {
         console.log('\n Faltan datos. Uso: npm run start -- POST products <title> <price> <category>');
         return;
-      }
+       }
 
       const nuevoProducto = {
         title: title,
