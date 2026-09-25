@@ -29,6 +29,6 @@ Comando a ejecutarObtener todos los productos: npm run start GET products
 
 Obtener un producto por ID:  npm run start GET products/15                                                                          
 
-Crear un nuevo producto: npm run start POST products Remera-Genial 300 indumentaria                                                                                                                             
+Crear un producto: npm run start POST products  "Remera Rex" 300 remera                                                                  
 
 Eliminar un producto:npm run start DELETE products/7
