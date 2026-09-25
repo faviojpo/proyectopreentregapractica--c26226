@@ -1,22 +1,19 @@
-// Usamos la URL completa con protocolo explícito
+// Endpoint base de DummyJSON
 const API_URL = 'https://dummyjson.com';
 
-// Encabezados completos para emular una petición de navegador web desde GitHub Codespaces
+// Encabezados HTTP completos para compatibilidad con GitHub Codespaces, auxiliado con IA
 const HEADERS_DEFAULT = {
   'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-  'Accept': 'application/json, text/plain, */*',
-  'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
-  'Cache-Control': 'no-cache',
-  'Pragma': 'no-cache'
+  'Accept': 'application/json, text/plain, */*'
 };
 
-// Captura de argumentos pasando los 2 primeros del sistema
+// Captura de argumentos omitiendo ejecutable y script
 const argumentos = process.argv.slice(2);
 const [metodo, ruta, ...resto] = argumentos;
 
 async function ejecutar() {
   if (!metodo || !ruta) {
-    console.log('\n Uso incorrecto. Ejemplos:');
+    console.log('\n Uso incorrecto. Ejemplos de comandos:');
     console.log('   npm run start -- GET products');
     console.log('   npm run start -- GET products/15');
     console.log('   npm run start -- POST products "Remera Rex" 300 remeras');
@@ -25,11 +22,11 @@ async function ejecutar() {
   }
 
   const metodoUpper = metodo.toUpperCase();
-  // Limpiamos la ruta para asegurar el formato correcto
+  // Elimina barras diagonales iniciales si se ingresaron por error
   const rutaLimpia = ruta.startsWith('/') ? ruta.slice(1) : ruta;
 
   try {
-    // 1. OBTENER PRODUCTOS (GET)
+    // 1. OBTENER TODOS LOS PRODUCTOS O UNO ESPECÍFICO (GET)
     if (metodoUpper === 'GET' && rutaLimpia.startsWith('products')) {
       const respuesta = await fetch(`${API_URL}/${rutaLimpia}`, {
         method: 'GET',
@@ -45,7 +42,7 @@ async function ejecutar() {
       console.log(datos);
     }
 
-    // 2. CREAR UN PRODUCTO (POST)
+    // 2. CREAR UN PRODUCTO NUEVO (POST)
     else if (metodoUpper === 'POST' && rutaLimpia === 'products') {
       const [title, price, category] = resto;
 
@@ -55,14 +52,13 @@ async function ejecutar() {
       }
 
       const nuevoProducto = {
-        title,
+        title: title,
         price: parseFloat(price),
-        category,
-        description: 'Producto creado desde CLI en Codespaces',
-        image: 'https://i.pravatar.cc'
+        category: category
       };
 
-      const respuesta = await fetch(`${API_URL}/products`, {
+      // Nota: DummyJSON requiere la ruta '/products/add' para peticiones POST
+      const respuesta = await fetch(`${API_URL}/products/add`, {
         method: 'POST',
         headers: {
           ...HEADERS_DEFAULT,
